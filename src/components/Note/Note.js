@@ -17,8 +17,19 @@ const Note = () => {
     fetchNote();
   }, [id, fetchNote]);
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await fetch(`/notes/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(note),
+    });
+  };
+
   return (
-    <form className="Form">
+    <form className="Form" onSubmit={handleSubmit}>
       <input
         className="Note-editable Note-title"
         type="text"
@@ -35,7 +46,9 @@ const Note = () => {
         }}
       />
       <div className="Note-actions ">
-        <button className="Button">Enregistrer</button>
+        <button className="Button" type="submit">
+          Enregistrer
+        </button>
       </div>
     </form>
   );
