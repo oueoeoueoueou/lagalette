@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 
 import "./Note.css";
 
-const Note = () => {
+const Note = ({ onSave }) => {
   const { id } = useParams();
   const [note, setNote] = useState(null);
 
@@ -26,6 +26,7 @@ const Note = () => {
       },
       body: JSON.stringify(note),
     });
+    onSave();
   };
 
   return (

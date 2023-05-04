@@ -29,7 +29,7 @@ function App() {
       </aside>
       <main className="Main">
         <Routes>
-          <Route path="/notes/:id" Component={Note} />
+          <Route path="/notes/:id" element={<Note onSave={fetchNotes} />} />
         </Routes>
       </main>
     </>
