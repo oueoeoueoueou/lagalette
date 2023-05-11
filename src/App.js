@@ -6,6 +6,7 @@ import Note from "./components/Note/Note";
 
 function App() {
   const [notes, setNotes] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchNotes = async () => {
     const response = await fetch("/notes");
@@ -17,11 +18,27 @@ function App() {
     fetchNotes();
   }, []);
 
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredNotes = notes
+    ? notes.filter((note) =>
+        note.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
+
   return (
     <>
       <aside className="Side">
-        {notes &&
-          notes.map((note) => (
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        {filteredNotes &&
+          filteredNotes.map((note) => (
             <Link to={`/notes/${note.id}`} className="Note-link">
               {note.title}
             </Link>

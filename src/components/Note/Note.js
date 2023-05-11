@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router-dom";
 
 import "./Note.css";
 
 const Note = ({ onSave }) => {
   const { id } = useParams();
   const [note, setNote] = useState(null);
+  const navigate = useNavigate();
 
   const fetchNote = useCallback(async () => {
     const response = await fetch(`/notes/${id}`);
@@ -29,6 +30,21 @@ const Note = ({ onSave }) => {
     onSave();
   };
 
+  const handeDelete = async (event) => {
+    event.preventDefault();
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette note?")) {
+    await fetch(`/notes/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(note),
+    });
+    onSave();
+    navigate("/");
+     }
+  };
+
   return (
     <form className="Form" onSubmit={handleSubmit}>
       <input
@@ -40,15 +56,18 @@ const Note = ({ onSave }) => {
         }}
       />
       <textarea
-        className="Note-editable Note-content"
+        className="Note-editable Note-content" onSubmit={handleSubmit}
         value={note ? note.content : ""}
         onChange={(event) => {
           setNote({ ...note, content: event.target.value });
         }}
       />
       <div className="Note-actions ">
-        <button className="Button" type="submit">
+        <button className="Button" onClick={handleSubmit}>
           Enregistrer
+        </button>
+        <button className="Button" onClick={handeDelete}>
+          Supprimer
         </button>
       </div>
     </form>
